@@ -69,6 +69,16 @@ class SegurancaIntegrationTests {
     }
 
     @Test
+    void usuarioCriadoPelaMigrationConsegueFazerLogin() throws Exception {
+        var salvo = repository.findByLogin("asdrubal@gmail.com").orElseThrow();
+        assertNotEquals("123456", salvo.getSenha());
+        mvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"login\":\"asdrubal@gmail.com\",\"senha\":\"123456\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isString());
+    }
+
+    @Test
     void senhaFicaArmazenadaComoBcrypt() {
         assertNotEquals("senha-de-teste", usuario.getSenha());
         assertTrue(encoder.matches("senha-de-teste", usuario.getSenha()));
