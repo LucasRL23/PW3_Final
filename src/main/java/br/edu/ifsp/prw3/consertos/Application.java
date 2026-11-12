@@ -10,7 +10,7 @@ public class Application {
 
 	public static void main(String[] args) {
 
-		// PRW3 - Avaliação 3 - API REST de consertos
+		// PRW3 - Avaliação 4 - API REST de consertos com Spring Security e JWT
 		// Integrantes:
 		//   Guilherme Ozaki
 		//   Lucas Rodrigues
