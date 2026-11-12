@@ -5,6 +5,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,15 @@ public class PW3TokenService {
     private static final String ISSUER = "DISCIPLINA PW3";
     private final Algorithm algoritmo;
 
+    private static final Logger log = LoggerFactory.getLogger(PW3TokenService.class);
+
     public PW3TokenService(@Value("${pw3.senha.principal.geracao.token}") String secret) {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalArgumentException("A senha principal do JWT (JWT_SECRET) não pode ser vazia.");
+        }
         if (secret.length() < 32) {
-            throw new IllegalArgumentException("JWT_SECRET deve ter pelo menos 32 caracteres.");
+            // Não impede a execução (nos slides foi usada "12345678"), apenas avisa.
+            log.warn("JWT_SECRET tem menos de 32 caracteres; recomenda-se uma chave maior.");
         }
         this.algoritmo = Algorithm.HMAC256(secret);
     }
